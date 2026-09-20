@@ -1,30 +1,26 @@
 {% extends "base.html" %}
 {% block body %}
 <p class="brand">{{ app_name }}</p>
-<p class="kicker">Hiburan. Bukan dukun. Bukan ramalan pasti.</p>
-<h1>Dia masih kepikiran kamu?</h1>
-<p class="lead">Kamu isi 2 nama + 1 pertanyaan. Kami kirim bacaan 3 kartu. Kamu screenshot. Selesai.</p>
+<h1>Baca 3 kartu soal dia.</h1>
+
+<div class="sample">
+  <p><strong>Ini apa?</strong><br>
+  Kamu bayar Rp 12.900. Kami tulis bacaan singkat: masih kepikiran atau tidak, plus 1 saran kecil untuk besok. Ini teks hiburan. Bukan dukun. Bukan chat live.</p>
+
+  <p><strong>Kamu isi apa?</strong><br>
+  1. Nama kamu<br>
+  2. Nama dia<br>
+  3. Pertanyaan (boleh pakai yang sudah terisi)</p>
+
+  <p><strong>Habis itu?</strong><br>
+  Layar kasih nomor transfer unik, contoh <strong>Rp 12.901</strong>. Transfer persis angka itu ke rekening di halaman berikutnya. Konfirmasi WA. Kami buka link. Kamu tekan “Buka 3 kartu”.</p>
+</div>
 
 <div class="row-cards">
   <img class="card-img" src="{{ url_for('static', filename='card1.png') }}" alt="">
   <img class="card-img" src="{{ url_for('static', filename='card2.png') }}" alt="">
   <img class="card-img" src="{{ url_for('static', filename='card3.png') }}" alt="">
 </div>
-
-<div class="sample">
-  <p><strong>Yang kamu dapat</strong></p>
-  <p>Kartu 1 — situasi sekarang<br>
-  Kartu 2 — apa yang diam / belum selesai<br>
-  Kartu 3 — 1 langkah aman untuk besok</p>
-  <p>Bukan chat 60 menit. Bukan jodoh orang sungguhan.</p>
-</div>
-
-<ol class="how">
-  <li>Isi nama kamu, nama dia, pertanyaan.</li>
-  <li>Transfer <strong>persis</strong> nominal di layar (contoh Rp 12.901).</li>
-  <li>WA “sudah transfer”. Admin buka link hasil.</li>
-  <li>Tekan <strong>Buka 3 kartu</strong>. Screenshot.</li>
-</ol>
 
 <form method="post" action="{{ url_for('create_order') }}" class="sheet">
   <input type="hidden" name="pack" value="satu">
@@ -46,7 +42,7 @@
     <input type="checkbox" name="age" value="yes" required>
     Saya 18+. Ini hiburan, bukan jaminan dia kembali.
   </label>
-  <button type="submit">Lanjut bayar Rp 12.900</button>
+  <button type="submit">Bayar, baru dapat bacaan</button>
 </form>
 <p class="fine">Kalau kamu butuh orang sungguhan, jangan belanja di sini.</p>
 {% endblock %}
