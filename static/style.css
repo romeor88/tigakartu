@@ -88,3 +88,9 @@ a { color: #e07a6c; }
 .how { color: #b7aaa0; padding-left: 18px; margin: 0 0 22px; line-height: 1.5; }
 .how li { margin: 6px 0; }
 .sample p { margin: 0 0 8px; }
+.sample, .lead, .how, h1 {
+  overflow: visible;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+.sample p { max-width: 100%; }

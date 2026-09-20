@@ -5,15 +5,13 @@
 
 <div class="sample">
   <p><strong>Ini apa?</strong><br>
-  Kamu bayar Rp 12.900. Kami tulis bacaan singkat: masih kepikiran atau tidak, plus 1 saran kecil untuk besok. Ini teks hiburan. Bukan dukun. Bukan chat live.</p>
+  Bayar Rp 12.900. Dapat bacaan 3 kartu soal dia. Hiburan, bukan dukun.</p>
 
-  <p><strong>Kamu isi apa?</strong><br>
-  1. Nama kamu<br>
-  2. Nama dia<br>
-  3. Pertanyaan (boleh pakai yang sudah terisi)</p>
+  <p><strong>Isi 3 hal:</strong><br>
+  nama kamu, nama dia, pertanyaan.</p>
 
-  <p><strong>Habis itu?</strong><br>
-  Layar kasih nomor transfer unik, contoh <strong>Rp 12.901</strong>. Transfer persis angka itu ke rekening di halaman berikutnya. Konfirmasi WA. Kami buka link. Kamu tekan “Buka 3 kartu”.</p>
+  <p><strong>Habis isi:</strong><br>
+  Transfer angka unik di layar, contoh 12901. Jangan dibulatkan. WA kami. Kami kirim link. Tekan Buka 3 kartu.</p>
 </div>
 
 <div class="row-cards">
@@ -24,7 +22,7 @@
 
 <form method="post" action="{{ url_for('create_order') }}" class="sheet">
   <input type="hidden" name="pack" value="satu">
-  <p class="price-line">Rp 12.900 · satu pertanyaan, sekali baca</p>
+  <p class="price-line">Rp 12.900 · satu pertanyaan</p>
 
   <label>Namamu
     <input type="text" name="nama_kamu" placeholder="inisial juga boleh" required>
@@ -35,7 +33,7 @@
   <label>Pertanyaan
     <input type="text" name="pertanyaan" value="Dia masih kepikiran aku nggak?" required>
   </label>
-  <label>WhatsApp kamu (supaya gampang dikasih link)
+  <label>WhatsApp kamu
     <input type="text" name="wa" placeholder="08xxxxxxxxxx">
   </label>
   <label class="check">
@@ -44,5 +42,5 @@
   </label>
   <button type="submit">Bayar, baru dapat bacaan</button>
 </form>
-<p class="fine">Kalau kamu butuh orang sungguhan, jangan belanja di sini.</p>
+<p class="fine">Bukan chat live. Bukan orang sungguhan.</p>
 {% endblock %}
