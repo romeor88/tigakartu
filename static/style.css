@@ -85,3 +85,6 @@ a { color: #e07a6c; }
   object-fit: cover;
   border: 1px solid #5a2a24;
 }
+.how { color: #b7aaa0; padding-left: 18px; margin: 0 0 22px; line-height: 1.5; }
+.how li { margin: 6px 0; }
+.sample p { margin: 0 0 8px; }
