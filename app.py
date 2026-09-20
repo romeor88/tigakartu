@@ -21,7 +21,7 @@ XAI_URL = "https://api.x.ai/v1/chat/completions"
 PACKS = {
     "satu": {
         "name": "1 pertanyaan",
-        "base": 12900,
+        "base": 5000,
         "shots": 1,
         "label": "3 kartu + arti + 1 langkah",
     }

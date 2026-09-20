@@ -1,17 +1,18 @@
 {% extends "base.html" %}
 {% block body %}
 <p class="brand">{{ app_name }}</p>
+<p class="kicker">CUMA RP 5.000</p>
 <h1>Baca 3 kartu soal dia.</h1>
 
 <div class="sample">
   <p><strong>Ini apa?</strong><br>
-  Bayar Rp 12.900. Dapat bacaan 3 kartu soal dia. Hiburan, bukan dukun.</p>
+  Bayar <strong>CUMA RP 5.000</strong>. Dapat bacaan 3 kartu soal dia. Hiburan, bukan dukun.</p>
 
   <p><strong>Isi 3 hal:</strong><br>
   nama kamu, nama dia, pertanyaan.</p>
 
   <p><strong>Habis isi:</strong><br>
-  Transfer angka unik di layar, contoh 12901. Jangan dibulatkan. WA kami. Kami kirim link. Tekan Buka 3 kartu.</p>
+  Transfer angka unik di layar, contoh 5001. Jangan dibulatkan. WA kami. Kami kirim link. Tekan Buka 3 kartu.</p>
 </div>
 
 <div class="row-cards">
@@ -22,7 +23,7 @@
 
 <form method="post" action="{{ url_for('create_order') }}" class="sheet">
   <input type="hidden" name="pack" value="satu">
-  <p class="price-line">Rp 12.900 · satu pertanyaan</p>
+  <p class="price-line">CUMA RP 5.000 · satu pertanyaan</p>
 
   <label>Namamu
     <input type="text" name="nama_kamu" placeholder="inisial juga boleh" required>
@@ -40,7 +41,7 @@
     <input type="checkbox" name="age" value="yes" required>
     Saya 18+. Ini hiburan, bukan jaminan dia kembali.
   </label>
-  <button type="submit">Bayar, baru dapat bacaan</button>
+  <button type="submit">Bayar CUMA RP 5.000</button>
 </form>
 <p class="fine">Bukan chat live. Bukan orang sungguhan.</p>
 {% endblock %}
