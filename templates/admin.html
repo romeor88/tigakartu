@@ -7,6 +7,7 @@
     <div>
       <strong>{{ fmt_rp(o.amount) }}</strong>
       <div>{{ o.nama_kamu }} → {{ o.nama_dia }}</div>
+      <div>{{ o.wa }}</div>
     </div>
     <form method="post" action="{{ url_for('admin_mark_paid', order_id=o.id) }}">
       <button type="submit">Dana masuk</button>
@@ -15,11 +16,17 @@
 {% else %}
   <p>Kosong.</p>
 {% endfor %}
+
 <h2>Aktif</h2>
 {% for o in paid %}
   <div class="sheet">
-    {{ fmt_rp(o.amount) }}
-    <div><a href="{{ url_for('hasil', token=o.token) }}">hasil</a></div>
+    <strong>{{ fmt_rp(o.amount) }}</strong>
+    <div>{{ o.nama_kamu }} → {{ o.nama_dia }} · {{ o.wa }}</div>
+    <p>
+      <a href="{{ url_for('hasil', token=o.token) }}">lihat hasil</a>
+      ·
+      <a href="{{ url_for('admin_resend', order_id=o.id) }}">kirim WA lagi</a>
+    </p>
   </div>
 {% endfor %}
 {% endblock %}

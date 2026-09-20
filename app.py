@@ -13,7 +13,7 @@ APP_NAME = "Tiga Kartu"
 DATABASE = os.environ.get("DATABASE_PATH", "tigakartu.db")
 SECRET_KEY = os.environ.get("SECRET_KEY", secrets.token_hex(16))
 ADMIN_PIN = os.environ.get("ADMIN_PIN", "2468")
-ADMIN_WA = os.environ.get("ADMIN_WA", "6281215550238")
+ADMIN_WA = os.environ.get("ADMIN_WA", "6281234567890")
 XAI_API_KEY = os.environ.get("XAI_API_KEY", "")
 XAI_MODEL = os.environ.get("XAI_MODEL", "grok-4-1-fast")
 XAI_URL = "https://api.x.ai/v1/chat/completions"
@@ -51,7 +51,8 @@ Aturan:
 - Pakai nama dan pertanyaan user.
 - Jangan janjikan dia kembali / putus / menikah.
 - Jangan minta nomor HP, ritual, pelet, sesajen.
-- Nama kartu boleh orisinal (bukan merek tarot terkenal jika bisa dihindari).
+- Nama kartu boleh orisinal.
+- Jaga bacaan tidak terlalu panjang supaya muat di WhatsApp.
 """
 
 app = Flask(__name__)
@@ -94,6 +95,24 @@ def now():
 
 def fmt_rp(n):
     return f"Rp {n:,}".replace(",", ".")
+
+def to_62(wa):
+    s = "".join(ch for ch in (wa or "") if ch.isdigit())
+    if s.startswith("62"):
+        return s
+    if s.startswith("0"):
+        return "62" + s[1:]
+    if s.startswith("8"):
+        return "62" + s
+    return s
+
+def build_user_msg(order):
+    return (
+        f"Namaku: {order['nama_kamu']}\n"
+        f"Namanya: {order['nama_dia']}\n"
+        f"Pertanyaan: {order['pertanyaan'] or 'Dia masih kepikiran aku nggak?'}\n"
+        "Baca 3 kartu."
+    )
 
 def next_amount(db, pack):
     base = PACKS[pack]["base"]
@@ -140,14 +159,14 @@ def call_grok(messages):
                 "model": XAI_MODEL,
                 "messages": messages,
                 "temperature": 0.8,
-                "max_tokens": 900,
+                "max_tokens": 700,
             },
             timeout=60,
         )
         r.raise_for_status()
         return r.json()["choices"][0]["message"]["content"].strip()
     except Exception:
-        return "Gagal membaca kartu. Coba sekali lagi."
+        return "Gagal membaca kartu. Coba sekali lagi dari admin."
 
 @app.route("/")
 def index():
@@ -161,6 +180,10 @@ def create_order():
     if request.form.get("age") != "yes":
         flash("Harus 18+")
         return redirect(url_for("index"))
+    wa = request.form.get("wa", "").strip()
+    if not to_62(wa):
+        flash("Isi WhatsApp yang valid")
+        return redirect(url_for("index"))
     db = get_db()
     amount = next_amount(db, pack)
     token = secrets.token_urlsafe(16)
@@ -171,7 +194,7 @@ def create_order():
         (
             pack,
             amount,
-            request.form.get("wa", "").strip(),
+            wa,
             token,
             PACKS[pack]["shots"],
             request.form.get("nama_kamu", "").strip(),
@@ -231,13 +254,8 @@ def api_gen():
     if not order or order["status"] != "paid":
         return jsonify({"error": "Belum aktif"}), 403
     if order["shots_left"] <= 0:
-        return jsonify({"error": "Sudah kebaca. Beli pertanyaan baru."}), 403
-    user_msg = (
-        f"Namaku: {order['nama_kamu']}\n"
-        f"Namanya: {order['nama_dia']}\n"
-        f"Pertanyaan: {order['pertanyaan'] or 'Dia masih kepikiran aku nggak?'}\n"
-        "Baca 3 kartu."
-    )
+        return jsonify({"error": "Sudah kebaca."}), 403
+    user_msg = build_user_msg(order)
     db.execute(
         "INSERT INTO messages (order_id,role,content,created_at) VALUES (?,?,?,?)",
         (order["id"], "user", user_msg, now()),
@@ -281,18 +299,67 @@ def admin_home():
         fmt_rp=fmt_rp,
     )
 
+@app.route("/admin/resend/<int:order_id>")
+@admin_required
+def admin_resend(order_id):
+    db = get_db()
+    order = db.execute("SELECT * FROM orders WHERE id=?", (order_id,)).fetchone()
+    if not order:
+        flash("Tidak ketemu")
+        return redirect(url_for("admin_home"))
+    msg = db.execute(
+        "SELECT content FROM messages WHERE order_id=? AND role='assistant' ORDER BY id DESC",
+        (order_id,),
+    ).fetchone()
+    reading = msg["content"] if msg else "Bacaan belum ada. Tekan Dana masuk dulu."
+    dest = to_62(order["wa"])
+    if not dest:
+        flash("WA kosong")
+        return redirect(url_for("admin_home"))
+    text = (
+        f"Tiga Kartu untuk {order['nama_kamu']} x {order['nama_dia']}\n"
+        f"{order['pertanyaan']}\n\n"
+        f"{reading}\n\n"
+        "Hiburan, bukan dukun, bukan ramalan pasti."
+    )
+    return redirect("https://wa.me/" + dest + "?text=" + quote(text))
+
 @app.route("/admin/pay/<int:order_id>", methods=["POST"])
 @admin_required
 def admin_mark_paid(order_id):
     db = get_db()
+    order = db.execute("SELECT * FROM orders WHERE id=?", (order_id,)).fetchone()
+    if not order or order["status"] != "waiting":
+        flash("Pesanan tidak valid")
+        return redirect(url_for("admin_home"))
+
+    user_msg = build_user_msg(order)
+    reading = call_grok(
+        [{"role": "system", "content": SYSTEM}, {"role": "user", "content": user_msg}]
+    )
     db.execute(
-        "UPDATE orders SET status='paid', paid_at=? WHERE id=? AND status='waiting'",
+        "INSERT INTO messages (order_id,role,content,created_at) VALUES (?,?,?,?)",
+        (order_id, "assistant", reading, now()),
+    )
+    db.execute(
+        "UPDATE orders SET status='paid', paid_at=?, shots_left=0 WHERE id=?",
         (now(), order_id),
     )
     db.commit()
-    o = db.execute("SELECT * FROM orders WHERE id=?", (order_id,)).fetchone()
-    flash(f"Aktif: {request.host_url}hasil/{o['token']}")
-    return redirect(url_for("admin_home"))
+
+    dest = to_62(order["wa"])
+    if not dest:
+        flash("Aktif, tapi WA kosong.")
+        return redirect(url_for("admin_home"))
+
+    text = (
+        f"Tiga Kartu untuk {order['nama_kamu']} x {order['nama_dia']}\n"
+        f"{order['pertanyaan']}\n\n"
+        f"{reading}\n\n"
+        "Hiburan, bukan dukun, bukan ramalan pasti."
+    )
+    wa_send = "https://wa.me/" + dest + "?text=" + quote(text)
+    return redirect(wa_send)
 
 init_db()
 if __name__ == "__main__":
