@@ -1,0 +1,87 @@
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: #0b0a09;
+  color: #f3ece4;
+  font-family: Georgia, "Times New Roman", serif;
+}
+.wrap { max-width: 420px; margin: 0 auto; padding: 28px 18px 80px; }
+.brand {
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  font-size: 11px;
+  color: #c43b2a;
+  margin: 0 0 10px;
+}
+.kicker { color: #c43b2a; font-size: 13px; margin: 0 0 8px; }
+h1 { font-size: 34px; line-height: 1.1; margin: 0 0 10px; font-weight: 600; }
+.lead { color: #b7aaa0; margin: 0 0 20px; font-size: 16px; }
+.row-cards { display: flex; gap: 10px; margin: 0 0 14px; }
+.card-face {
+  flex: 1;
+  height: 120px;
+  border: 1px solid #5a2a24;
+  background: linear-gradient(180deg, #2a1412, #140c0b);
+  display: flex; align-items: center; justify-content: center;
+  color: #c43b2a;
+  letter-spacing: .2em;
+}
+.sample { color: #b7aaa0; font-size: 14px; line-height: 1.45; margin: 0 0 22px; }
+.sheet {
+  background: #161311;
+  border: 1px solid #3a2a26;
+  padding: 16px;
+}
+.price-line { margin: 0 0 12px; color: #c43b2a; }
+label {
+  display: block;
+  margin: 12px 0;
+  font-size: 13px;
+  color: #b7aaa0;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+}
+input {
+  width: 100%;
+  margin-top: 6px;
+  padding: 12px;
+  border: 1px solid #3a2a26;
+  background: #0b0a09;
+  color: #f3ece4;
+  font: inherit;
+}
+.check { display: flex; gap: 8px; color: #f3ece4; align-items: flex-start; }
+.check input { width: auto; margin: 3px 0 0; }
+button, .btn {
+  width: 100%;
+  border: 0;
+  background: #c43b2a;
+  color: #fff;
+  padding: 14px;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  font-weight: 700;
+  text-decoration: none;
+  display: block;
+  text-align: center;
+  margin-top: 8px;
+}
+.amount { font-size: 36px; margin: 8px 0; }
+.fine, .flash { color: #b7aaa0; font-size: 12px; }
+.flash { background: #2a1412; padding: 10px; margin-bottom: 12px; }
+.reading pre {
+  white-space: pre-wrap;
+  background: #161311;
+  border: 1px solid #3a2a26;
+  padding: 14px;
+  line-height: 1.45;
+}
+.row { display: flex; justify-content: space-between; gap: 10px; align-items: center; }
+.row button { width: auto; }
+a { color: #e07a6c; }
+.card-img {
+  flex: 1;
+  width: 0;
+  height: 150px;
+  object-fit: cover;
+  border: 1px solid #5a2a24;
+}

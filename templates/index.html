@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block body %}
+<p class="brand">{{ app_name }}</p>
+<p class="kicker">Hiburan. Bukan dukun. Bukan pasti.</p>
+<h1>Dia masih kepikiran kamu?</h1>
+<p class="lead">Tiga kartu. Satu pertanyaan. Hasil bisa di-screenshot.</p>
+
+<div class="row-cards">
+  <img class="card-img" src="{{ url_for('static', filename='card1.png') }}" alt="">
+  <img class="card-img" src="{{ url_for('static', filename='card2.png') }}" alt="">
+  <img class="card-img" src="{{ url_for('static', filename='card3.png') }}" alt="">
+</div>
+<p class="sample">
+  <strong>Contoh kartu II — Diam.</strong>
+  Ada yang belum selesai. Bukan berarti dia siap chat malam ini.
+</p>
+
+<form method="post" action="{{ url_for('create_order') }}" class="sheet">
+  <input type="hidden" name="pack" value="satu">
+  <p class="price-line">Rp 12.900 · 1 pertanyaan</p>
+  <label>Namamu
+    <input type="text" name="nama_kamu" required>
+  </label>
+  <label>Nama dia
+    <input type="text" name="nama_dia" required>
+  </label>
+  <label>Pertanyaan
+    <input type="text" name="pertanyaan" value="Dia masih kepikiran aku nggak?" required>
+  </label>
+  <label>WhatsApp (opsional)
+    <input type="text" name="wa" placeholder="08xxxxxxxxxx">
+  </label>
+  <label class="check">
+    <input type="checkbox" name="age" value="yes" required>
+    18+. Saya paham ini hiburan, bukan ramalan pasti.
+  </label>
+  <button type="submit">Lanjut bayar</button>
+</form>
+<p class="fine">Transfer bank nominal unik. Admin buka kartunya.</p>
+{% endblock %}

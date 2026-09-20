@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block body %}
+<p class="brand">{{ app_name }}</p>
+<h1>{{ order.nama_kamu }} × {{ order.nama_dia }}</h1>
+<p class="lead">{{ order.pertanyaan }}</p>
+<div id="log" class="reading">
+  {% for m in messages %}
+    {% if m.role == 'assistant' %}<pre>{{ m.content }}</pre>{% endif %}
+  {% endfor %}
+</div>
+{% if order.shots_left > 0 %}
+  <button type="button" id="gen" class="btn">Buka 3 kartu</button>
+{% else %}
+  <p class="fine">Sudah kebaca.</p>
+{% endif %}
+<script>
+const token = {{ token|tojson }};
+const btn = document.getElementById('gen');
+if (btn) btn.onclick = async () => {
+  btn.disabled = true;
+  const res = await fetch('/api/gen', {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({token})
+  });
+  const data = await res.json();
+  const pre = document.createElement('pre');
+  pre.textContent = data.reply || data.error;
+  document.getElementById('log').appendChild(pre);
+};
+</script>
+{% endblock %}

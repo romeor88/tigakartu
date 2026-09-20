@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block body %}
+<p class="brand">Admin {{ app_name }}</p>
+<h1>Menunggu</h1>
+{% for o in waiting %}
+  <div class="sheet row">
+    <div>
+      <strong>{{ fmt_rp(o.amount) }}</strong>
+      <div>{{ o.nama_kamu }} → {{ o.nama_dia }}</div>
+    </div>
+    <form method="post" action="{{ url_for('admin_mark_paid', order_id=o.id) }}">
+      <button type="submit">Dana masuk</button>
+    </form>
+  </div>
+{% else %}
+  <p>Kosong.</p>
+{% endfor %}
+<h2>Aktif</h2>
+{% for o in paid %}
+  <div class="sheet">
+    {{ fmt_rp(o.amount) }}
+    <div><a href="{{ url_for('hasil', token=o.token) }}">hasil</a></div>
+  </div>
+{% endfor %}
+{% endblock %}

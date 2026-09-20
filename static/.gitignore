@@ -1,0 +1,4 @@
+.venv/
+.env
+tigakartu.db
+__pycache__/

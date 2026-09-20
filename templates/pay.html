@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block body %}
+<p class="brand">{{ app_name }}</p>
+<h1>Transfer tepat</h1>
+<p class="amount">{{ amount_fmt }}</p>
+<p class="lead">Jangan dibulatkan. Angka belakang = kode kamu.</p>
+<div class="sheet">
+  <p>Bank<br><b>Bank Central Asia </b></p>
+  <p>No. rekening<br><b>218.167.6878</b></p>
+  <p>a.n.<br><b>Romeo B S Reijman</b></p>
+  <p>Status: {{ order.status }}</p>
+  {% if order.status != 'paid' %}
+    <a class="btn" href="{{ wa_link }}">Saya sudah transfer</a>
+  {% else %}
+    <a class="btn" href="{{ url_for('hasil', token=order.token) }}">Buka kartu</a>
+  {% endif %}
+</div>
+{% endblock %}
